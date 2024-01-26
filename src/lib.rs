@@ -1,3 +1,3 @@
-pub mod config;
+pub mod db_connection;
 pub mod module;
-pub mod setup;
+pub mod settings;

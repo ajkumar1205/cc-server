@@ -1,0 +1,12 @@
+debug = true
+
+[database]
+echo = true
+
+[settings]
+hero = "hello"
+
+[server]
+ssl_mode = "Disable"
+host = "127.0.0.1"
+port = 8080

@@ -1,0 +1,6 @@
+[database]
+url = "sqlite:collabs-code.db"
+database_name = "collabs-code"
+
+
+
