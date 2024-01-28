@@ -1,6 +1,6 @@
 [database]
-url = "sqlite:collabs-code.db"
-database_name = "collabs-code"
+url = "sqlite:collabs.sqlite3"
+database_name = "collabs"
 
 
 

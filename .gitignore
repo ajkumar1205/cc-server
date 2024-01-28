@@ -1,4 +1,4 @@
 **/target
 .env
-collabs-code.db
+collabs.sqlite3
 src/config/local.toml

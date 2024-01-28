@@ -1,3 +1,4 @@
+pub mod api;
 pub mod db_connection;
-pub mod module;
+pub mod handler;
 pub mod settings;

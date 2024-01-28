@@ -2,19 +2,23 @@
 
 // use sea_orm::entity::prelude::*;
 use sea_orm::entity::prelude::*;
+use serde::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
 #[sea_orm(table_name = "user")]
 pub struct Model {
     #[sea_orm(primary_key)]
+    #[serde(skip_deserializing)]
     pub id: i32,
     pub name: String,
     #[sea_orm(unique)]
     pub email: String,
     pub password: String,
     #[sea_orm(unique)]
-    pub uuid: String,
-    pub created_at: String,
+    #[sea_orm(column_type = "Uuid")]
+    pub uuid: Uuid,
+    // pub created_at: DateTimeWithTimeZone,
+    pub created_at: DateTime,
     pub is_admin: bool,
 }
 

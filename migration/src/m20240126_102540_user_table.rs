@@ -22,12 +22,18 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(User::Email).string().unique_key().not_null())
                     .col(ColumnDef::new(User::Password).string().not_null())
                     .col(ColumnDef::new(User::Uuid).uuid().unique_key().not_null())
-                    .col(ColumnDef::new(User::CreatedAt).date_time().not_null())
+                    .col(
+                        ColumnDef::new(User::CreatedAt)
+                            // .timestamp_with_time_zone()
+                            .date_time()
+                            .default(Expr::current_timestamp())
+                            .not_null(),
+                    )
                     .col(
                         ColumnDef::new(User::IsAdmin)
                             .boolean()
-                            .not_null()
-                            .default(false),
+                            .default(false)
+                            .not_null(),
                     )
                     .to_owned(),
             )
