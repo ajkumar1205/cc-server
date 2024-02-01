@@ -3,6 +3,8 @@ use derive_more::{Display, Error};
 use serde::Serialize;
 use validator::ValidationErrors;
 
+// use bcrypt::BcryptError;
+
 #[derive(Serialize)]
 struct FormattedErrorResponse {
     status_code: u16,
@@ -17,7 +19,14 @@ struct FormattedValidationErrorResponse {
     message: ValidationErrors,
 }
 
-#[derive(Debug, Display, Error, PartialEq)]
+// #[derive(Debug)]
+// struct HashingErrorResponse {
+//     status_code: u16,
+//     error: String,
+//     message: BcryptError,
+// }
+
+#[derive(Debug, Display, Error)]
 pub enum CustomError {
     #[display(fmt = "Validation error")]
     ValidationError { e: ValidationErrors },
@@ -35,6 +44,8 @@ pub enum CustomError {
     Conflict,
     #[display(fmt = "Unauthorized")]
     Unauthorized,
+    // #[display(fmt = "Hash error")]
+    // HashingError { e: BcryptError },
 }
 
 impl CustomError {
@@ -47,6 +58,7 @@ impl CustomError {
             CustomError::NotFoundWithMsg { .. } => "Not Found".to_owned(),
             CustomError::Conflict => "Conflict".to_owned(),
             CustomError::Unauthorized => "Unauthorized".to_owned(),
+            // CustomError::HashingError { .. } => "Hash failed".to_owned(),
             _ => "".to_owned(),
         }
     }
@@ -63,6 +75,7 @@ impl ResponseError for CustomError {
             CustomError::NotFoundWithMsg { .. } => StatusCode::NOT_FOUND,
             CustomError::Conflict => StatusCode::CONFLICT,
             CustomError::Unauthorized => StatusCode::UNAUTHORIZED,
+            // CustomError::HashingError { .. } => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -74,7 +87,16 @@ impl ResponseError for CustomError {
                 message: e.to_owned(),
             };
             HttpResponse::build(self.status_code()).json(response)
-        } else {
+        }
+        // else if let CustomError::HashingError { e } = &self {
+        //     let response = HashingErrorResponse {
+        //         status_code: self.status_code().as_u16(),
+        //         error: self.message(),
+        //         message: e.to_string(),
+        //     };
+        //     HttpResponse::build(self.status_code()).json(response)
+        // }
+        else {
             let response = FormattedErrorResponse {
                 status_code: self.status_code().as_u16(),
                 error: self.message(),

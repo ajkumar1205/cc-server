@@ -1,4 +1,5 @@
 use sea_orm_migration::prelude::*;
+// use uuid::Uuid;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -22,18 +23,36 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(User::Email).string().unique_key().not_null())
                     .col(ColumnDef::new(User::Password).string().not_null())
                     .col(ColumnDef::new(User::Uuid).uuid().unique_key().not_null())
+                    .col(ColumnDef::new(User::ProfilePic).binary().null())
+                    .col(
+                        ColumnDef::new(User::IsAdmin)
+                            .boolean()
+                            .default(0)
+                            .not_null(),
+                    )
                     .col(
                         ColumnDef::new(User::CreatedAt)
-                            // .timestamp_with_time_zone()
                             .date_time()
                             .default(Expr::current_timestamp())
                             .not_null(),
                     )
                     .col(
-                        ColumnDef::new(User::IsAdmin)
-                            .boolean()
-                            .default(false)
+                        ColumnDef::new(User::UpdatedAt)
+                            .date_time()
+                            .default(Expr::current_timestamp())
                             .not_null(),
+                    )
+                    .index(
+                        Index::create()
+                            .name("idx-indexes-email")
+                            .table(User::Table)
+                            .col(User::Email),
+                    )
+                    .index(
+                        Index::create()
+                            .name("idx-indexes-id")
+                            .table(User::Table)
+                            .col(User::Id),
                     )
                     .to_owned(),
             )
@@ -55,6 +74,8 @@ enum User {
     Email,
     Password,
     Uuid,
+    ProfilePic,
     CreatedAt,
+    UpdatedAt,
     IsAdmin,
 }

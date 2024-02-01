@@ -3,21 +3,16 @@ mod db_connection;
 mod handler;
 mod settings;
 
-use crate::api::account::controller::user_signup;
-// use crate::api::account::route::account_config;
+use crate::api::account::route::{login, signup};
 use db_connection::set_up_db;
 use settings::Settings;
 
-use actix_web::{middleware::Logger, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{middleware::Logger, web, App, HttpServer};
 use sea_orm::DbConn;
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("hello there ")
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "info");
+    std::env::set_var("RUST_LOG", "warn");
     std::env::set_var("RUST_BACKTRACE", "1");
     // env_logger::init();
     env_logger::builder()
@@ -40,7 +35,7 @@ async fn main() -> std::io::Result<()> {
     // instance of appilcation data
     let db_connection = web::Data::new(db_connection);
 
-    log::info!("\n \n Running server at http://127.0.0.1:8080/ \n");
+    println!("\n \n Running server at http://127.0.0.1:8080/ \n");
 
     HttpServer::new(move || {
         // let logger = Logger::default();
@@ -49,12 +44,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(logger)
             .app_data(db_connection.clone()) // Register the application state of data-connection pool
-            .service(
-                web::scope("/api")
-                    // .configure(account_config)
-                    .route("/hey", web::get().to(manual_hello))
-                    .service(user_signup),
-            )
+            .service(web::scope("/api").configure(login).configure(signup))
     })
     .bind((server_config.host, server_config.port))?
     .run()

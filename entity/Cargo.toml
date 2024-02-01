@@ -11,6 +11,7 @@ path = "src/mod.rs"
 [dependencies]
 serde = { version = "1.0.195", features = ["derive"]}
 async-std = { version = "1", features = ["attributes", "tokio1"] }
+chrono = "0.4.32"
 
 [dependencies.sea-orm]
 version = "0.12.12"
