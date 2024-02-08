@@ -15,9 +15,9 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(User::Id)
                             .integer()
-                            .not_null()
                             .auto_increment()
-                            .primary_key(),
+                            .primary_key()
+                            .not_null(),
                     )
                     .col(ColumnDef::new(User::Name).string().not_null())
                     .col(ColumnDef::new(User::Email).string().unique_key().not_null())
@@ -42,18 +42,19 @@ impl MigrationTrait for Migration {
                             .default(Expr::current_timestamp())
                             .not_null(),
                     )
-                    .index(
-                        Index::create()
-                            .name("idx-indexes-email")
-                            .table(User::Table)
-                            .col(User::Email),
-                    )
-                    .index(
-                        Index::create()
-                            .name("idx-indexes-id")
-                            .table(User::Table)
-                            .col(User::Id),
-                    )
+                    // ! issue in indexing
+                    // .index(
+                    //     Index::create()
+                    //         .name("idx-indexes-email")
+                    //         .table(User::Table)
+                    //         .col(User::Email),
+                    // )
+                    // .index(
+                    //     Index::create()
+                    //         .name("idx-indexes-id")
+                    //         .table(User::Table)
+                    //         .col(User::Id),
+                    // )
                     .to_owned(),
             )
             .await
@@ -72,8 +73,8 @@ enum User {
     Id,
     Name,
     Email,
-    Password,
     Uuid,
+    Password,
     ProfilePic,
     CreatedAt,
     UpdatedAt,

@@ -3,7 +3,7 @@
 // use std::fmt::Binary;
 
 use chrono::NaiveDateTime;
-use sea_orm::entity::prelude::*;
+use sea_orm::{entity::prelude::*, prelude::async_trait::async_trait};
 use serde::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
@@ -15,12 +15,11 @@ pub struct Model {
     pub name: String,
     #[sea_orm(unique)]
     pub email: String,
-    // #[serde(skip_serializing)]
-    pub password: String,
     #[sea_orm(unique)]
     #[sea_orm(column_type = "Uuid")]
     pub uuid: Uuid,
-    pub bio: Option<String>,
+    // #[serde(skip_serializing)]
+    pub password: String,
     pub profile_pic: Option<Vec<u8>>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
@@ -30,4 +29,21 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {}
 
-impl ActiveModelBehavior for ActiveModel {}
+#[async_trait]
+impl ActiveModelBehavior for ActiveModel {
+    // /// Create a new ActiveModel with default values. Also used by `Default::default()`.
+    // fn new() -> Self {
+    //     Self {
+    //         uuid: Set(Uuid::new_v4()),
+    //         ..ActiveModelTrait::default()
+    //     }
+    // }
+
+    // /// Will be triggered before insert / update
+    // async fn before_save<C>(self, db: &C, insert: bool) -> Result<Self, DbErr>
+    // where
+    //     C: ConnectionTrait,
+    // {
+    //     Ok(self)
+    // }
+}

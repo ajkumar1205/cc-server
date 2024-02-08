@@ -30,9 +30,10 @@ chrono = "0.4.32"
 uuid = {version = "1.7.0", features = ["v4", "fast-rng", "macro-diagnostics"] }
 sea-orm = { version = "^0.12.12", features = [ "sqlx-sqlite", "runtime-async-std-native-tls", "macros" ] }
 once_cell = "1.19.0"
-url = "2.5.0"
 openidconnect = "3.4.0"
-oauth2 = "4.4.2"
+oauth2 = { version = "4.4.2", features = ["reqwest"]}
+url = "2.5.0"
+lazy_static = "1.4.0"
 
 
 

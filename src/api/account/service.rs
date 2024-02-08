@@ -1,8 +1,7 @@
 // use bcrypt::{hash, verify, DEFAULT_COST};
 use entity::user;
-use migration::DbErr;
 // use sea_orm::{query::*, ActiveModelTrait, ConnectionTrait, ModelTrait};
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
+use sea_orm::{ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter, Set};
 use uuid::Uuid;
 
 use crate::handler::errors::CustomError;
@@ -15,7 +14,7 @@ pub async fn insert_user(
     password: &str,
     is_admin: bool,
     uuid: Uuid,
-) -> Result<usize, CustomError> {
+) -> Result<i32, CustomError> {
     // let password = password.to_string();
     // let hashed_pass = hash(password, DEFAULT_COST).map_err(|e| return e);
 
@@ -34,10 +33,13 @@ pub async fn insert_user(
         .await
         .map_err(|e| match e {
             DbErr::Query(..) => CustomError::Conflict,
-            _ => CustomError::ServerError,
+            _ => {
+                // println!("{:#?}", e);
+                CustomError::ServerError
+            }
         })?;
 
-    Ok(res.last_insert_id as usize)
+    Ok(res.last_insert_id)
 }
 
 // ===================== checks for login

@@ -3,7 +3,10 @@ mod db_connection;
 mod handler;
 mod settings;
 
-use crate::api::account::route::{login, signup};
+use crate::api::routes::{
+    account::{login, signup},
+    // google_auth::config,
+};
 use db_connection::set_up_db;
 use settings::Settings;
 
@@ -12,9 +15,12 @@ use sea_orm::DbConn;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "warn");
-    std::env::set_var("RUST_BACKTRACE", "1");
-    // env_logger::init();
+    // std::env::set_var("RUST_LOG", "info");
+    std::env::set_var(
+        "RUST_LOG",
+        "actix_web=info, sea_orm=info, sea_orm::entity::active_model::operations::insert=debug",
+    );
+    std::env::set_var("RUST_BACKTRACE", "FULL");
     env_logger::builder()
         .format_timestamp(None) // Do not include timestamps
         .init();
@@ -44,7 +50,12 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(logger)
             .app_data(db_connection.clone()) // Register the application state of data-connection pool
-            .service(web::scope("/api").configure(login).configure(signup))
+            .service(
+                web::scope("/api")
+                    .configure(login)
+                    .configure(signup)
+                    // .configure(config),
+            )
     })
     .bind((server_config.host, server_config.port))?
     .run()

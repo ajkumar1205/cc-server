@@ -5,8 +5,8 @@ use crate::handler::errors::CustomError;
 use actix_web::{web, HttpResponse};
 // use futures::TryFutureExt;
 use sea_orm::DatabaseConnection;
-// use sea_orm::{ActiveValue, ColumnTrait, , DbErr, EntityTrait, QueryFilter};
 use uuid::Uuid;
+// use sea_orm::{ActiveValue, ColumnTrait, , DbErr, EntityTrait, QueryFilter};
 use validator::Validate;
 
 // use entity::user;
